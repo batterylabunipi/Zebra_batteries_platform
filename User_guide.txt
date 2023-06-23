@@ -1,0 +1,18 @@
+This packet contains the following file:
+-cel_param.mat
+-input_vector.m
+-Battery_model.slx
+
+The cel_param.mat file contains a structure "param" with the fields: SoC, OCV, Rni, R1, R2, t1, t2, string_cap, and broken_cell. SoC, OCV, Rni, R1, R2, t1, t2, Rfe, and Vfe are the cell model parameters. The resistance quantities are stored in ohms, the voltage quantities are in volts, the time constants (t1=R1C1, t2=R2C2) are in seconds and the SoC is stored as Q/Qn from 0 to 1. The broken_cell parameter is the resistance value of a broken cell in ohms. The string_cap value is the capacity of the cells in amperehours. 
+
+The file input_vector.m is a script to generate the input vectors of the battery model and its parameters.
+-mdl_input.M, mdl_input.N define the battery structure where M is the number of strings and N is the number of cells per string. The model accepts up to 5 strings
+-mdl_input.t, mdl_input.I are the input test vectors of the battery model where t is the current time and I is the battery current divided by mdl_input.M (t in s, I in A with I>0 in discharge)
+-mdl_input.N_cell is a vector containing the number of healthy cells of the strings.
+-mdl_input.Start_SoC is a vector containing the initial SoC (from 0 to 1) of each string.
+
+The battery_model.slx file is the Simulink model. This file is made with Matlab version R2021b using Simscape packet. The model is composed of 5 subsystems. Each subsystem models one string composed of the cell models, the parallelization diode, and a power switch. The power switch is used to change the number of strings that composed the battery. The subsystem stops the simulation when the string current becomes higher than 1C rate or the SoC became less than 0.1 (10%).
+
+To use the platform, the use should first execute the cel_param.mat and input_vector.m files to load and create the model variables. Then, the battery_model.slx file can be executed. The simulation c
+
+The simulation generates an output structure "out” containing the voltage and the current of the 5 string models and the battery ones. 
